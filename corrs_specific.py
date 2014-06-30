@@ -60,7 +60,7 @@ def main():
 
         with open('output/fit_specific.md', "a") as file:
             file.write("\n# %s\n" % label)
-            file.write('![](corrs%s_specific)\n' % name)
+            file.write('![](corrs%s_specific.png)\n' % name)
 
             if type == "direct":
                 file.write("## Direct\n")
