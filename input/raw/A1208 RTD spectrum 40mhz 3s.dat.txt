@@ -1,0 +1,11 @@
+Sample name:	A1208
+Integration time (ms):	3.000000E+3
+S1 H Slit (µm):	1.000000E+2
+S1 V Slit (µm):	1.000000E+2
+S2 H Slit (µm):	0.000000E+0
+S2 V Slit (µm):	0.000000E+0
+S1 Wave (nm):	8.939996E+2
+S2 Wave (nm):	8.949968E+2
+Bias (V):	0.000000E+0
+HWP angle:	0.000000E+0
+Filter wheel:	10 - 0.2 - 63%
