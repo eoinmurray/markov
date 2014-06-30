@@ -15,6 +15,7 @@ def gauss(t):
     b = 0
     return a*np.exp(-((t-b)**2)/(2*c**2))
 
+
 class MarkovExpansionState():
 
     def __init__(self, statei, statef):
@@ -113,7 +114,6 @@ if __name__ == "__main__":
     state_neg = MarkovExpansionState(empty, posexciton)
     gxp_x = np.concatenate((state_neg(t)[::-1], state_pos(t)[1:-1]), axis=0)
 
-
     # lets convolute all our g's.
     gaussed = gauss(tau)
     gxxt5_xp = np.convolve(gaussed/gaussed.sum(), gxxt5_xp, 'same')
@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     # make the plots
     def makePlot(x, y, l):
-        plt.plot(x,y)
+        plt.plot(x, y)
         plt.text(3, 0.3, l)
         plt.ylim(ymin=0)
         plt.xlim([-15, 15])

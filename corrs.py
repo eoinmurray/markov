@@ -1,112 +1,88 @@
-import numpy as np
 import matplotlib.pyplot as plt
-import scipy.optimize as optimize
-import brewer2mpl
-import g2 as g2
 
-set2 = brewer2mpl.get_map('Spectral', 'Diverging', 5).mpl_colors
+# try:
+import prettyplotlib as ppl
+from prettyplotlib import brewer2mpl
+# except ImportError:
+#     ppl = plt
+
+
+import numpy as np
+import scipy.optimize as optimize
+import g2 as g2
 np.seterr(all="ignore")
 
-with open('output/fit.md', "w") as file:
-    file.write("")
 
 names = ['1_3', '3_5', '2_3', '1_6', '2_6', '4_5']
-states = ["XXT5", "XXT1", "XP", "XX", "X", "XT5"]
-labels = ["XXT5_XP", "XP_X", "XXT1_XP", "XXT5_XT5", "XXT1_XT5", "XX_X"]
-
-fmaxs = [1.4, 1.1]
-
-def gauss(t):
-    """Generates gaussian for convolutionz"""
-    c = 0.3
-    a = 1.0/np.sqrt(2*np.pi*(c**2))
-    b = 0
-    return a*np.exp(-((t-b)**2)/(2*c**2))
-
-foos = [
-    g2.g2c_complicated,
-    g2.g2c_complicated,
-    g2.g2c,
-    g2.g2c,
-    g2.g2c_auto,
-    g2.g2c]
-
-p0s = [
-    [0.6, 1.1, 0.4, 0.5, 0],
-    [0.6, 1.1, 0.4, 0.5, 0],
-    [4, 1, 0.4, 0],
-    [4, 1, 0.4, 0],
-    [1, 0.4, 0],
-    [4, 1, 0.4, 0]
-]
-
+states = ['XXT5', 'XXT1', 'XP', 'XX', 'X', 'XT5']
+labels = ['1_3 A-I', '3_5 A-I', '2_3 A-D', '1_6 A-D', '2_6 A-A/I', '4_5 A-D']
 zeropoints = [171.6, 171.0, 171.5, 170.5, 171.1, 171.2]
 
-for i in [0, 1, 2, 3, 4, 5]:
 
-    name = names[i]
-    foo = foos[i]
-    p0 = p0s[i]
-    label = labels[i]
+def main():
 
-    data = np.loadtxt('input/%s.txt' % name, delimiter=",")
-    time = data[:, 0] - zeropoints[i]
-    counts = data[:, 1]
+    with open('output/fit.md', "w") as file:
+        file.write("")
 
-    idx = (time > -20) & (time < 20)
-    time = time[idx]
-    counts = counts[idx]
-    counts_n = counts/counts.mean()
+    # for i in [5]:
+    for i in [0, 1, 2, 3, 4, 5]:
 
-    if name == "2_6":
-        popt2, pcov2 = optimize.curve_fit(g2.g2c_complicated, time, counts_n, p0=[0.6, 1.1, 0.4, 0.5, 0])
-        popt3, pcov3 = optimize.curve_fit(g2.g2c, time, counts_n, p0=[4, 1, 0.4, 0],)
+        name = names[i]
+        label = labels[i]
 
-    popt, pcov = optimize.curve_fit(foo, time, counts_n, p0=p0)
-    std_err = np.sqrt(np.diag(pcov))
+        data = np.loadtxt('input/%s.txt' % name, delimiter=",")
+        time = data[:, 0] - zeropoints[i]
+        counts = data[:, 1]
 
-    with open('output/fit.md', "a") as file:
-        file.write("\n" + name + "\n")
+        idx = (time > -20) & (time < 20)
+        time = time[idx]
+        counts = counts[idx]
+        counts_n = counts/counts.mean()
 
-        for j in xrange(len(popt)):
-            param = popt[j]
-            std_err = np.sqrt(np.diag(pcov))
-            err = std_err[j]
-            file.write("\t%1.3lf +- %1.3lf\n" % (param, err))
+        poptd, pcovd = optimize.curve_fit(g2.g2c_direct, time, counts_n, p0=[4.0, 1.0, 0.5, 0.0])
+        popti, pcovi = optimize.curve_fit(g2.g2c_indirect, time, counts_n, p0=[1.3, 0.4, 1.5, 0.6, 0.0])
+        popta, pcova = optimize.curve_fit(g2.g2c_antidirect, time, counts_n, p0=[1.0, 1.0, 0.0])
 
-        if name == "2_6":
+        perrd = np.sqrt(np.diag(pcovd))
+        perri = np.sqrt(np.diag(pcovd))
+        perra = np.sqrt(np.diag(pcovd))
 
-            file.write("\n # Indirect")
-            for j in xrange(len(popt2)):
-                param = popt2[j]
-                std_err = np.sqrt(np.diag(pcov2))
-                err = std_err[j]
-                file.write("\t%1.3lf +- %1.3lf\n" % (param, err))
+        with open('output/fit.md', "a") as file:
+            file.write("\n# %s\n" % label)
 
-            file.write("\n # Direct")
-            for j in xrange(len(popt3)):
-                param = popt3[j]
-                std_err = np.sqrt(np.diag(pcov3))
-                err = std_err[j]
-                file.write("\t%1.3lf +- %1.3lf\n" % (param, err))
+            file.write("## Direct\n")
+            file.write("\tc1: %1.3lf +- %1.3lf\n" % (poptd[0], perrd[0]))
+            file.write("\tl1: %1.3lf +- %1.3lf\n" % (poptd[1], perrd[1]))
+            file.write("\tl2: %1.3lf +- %1.3lf\n" % (poptd[2], perrd[2]))
 
-    # just plotting stuff now
-    plt.close()
-    plt.grid()
-    plt.plot(time, counts_n, linewidth=3, color=set2[0])
-    plt.text(5, 0.1, label)
-    plt.text(5, 0.6, name)
+            file.write("## Indirect\n")
+            file.write("\tc1: %1.3lf +- %1.3lf\n" % (popti[0], perri[0]))
+            file.write("\tl1: %1.3lf +- %1.3lf\n" % (popti[1], perri[1]))
+            file.write("\tl3: %1.3lf +- %1.3lf\n" % (popti[2], perri[2]))
+            file.write("\tl2: %1.3lf +- %1.3lf\n" % (popti[3], perri[3]))
 
-    if name == "2_6":
-        plt.plot(time, g2.g2c_complicated(time, *popt2), label="fit", linewidth=3, color='g')
-        plt.plot(time, g2.g2c(time, *popt3), label="fit", linewidth=3, color='k')
+            file.write("## Antidirect\n")
+            file.write("\tl1: %1.3lf +- %1.3lf\n" % (popta[0], perra[1]))
+            file.write("\tl2: %1.3lf +- %1.3lf\n" % (popta[1], perra[0]))
 
-    plt.plot(time, foo(time, *popt), label="fit", linewidth=3, color=set2[4])
-    plt.xlim([-15, 15])
-    plt.ylim(ymin=0)
+        # just plotting stuff now
+        plt.close()
+        ppl.plot(time, counts_n)
+        ppl.plot(time, g2.g2c_direct(time, *poptd), label="Direct", linewidth=2)
+        ppl.plot(time, g2.g2c_indirect(time, *popti), label="Indirect", linewidth=3)
+        ppl.plot(time, g2.g2c_antidirect(time, *popta), label="Antidirect", linewidth=2)
 
-    xlabel = plt.xlabel("$\\tau (ns)$")
-    ylabel = plt.ylabel("$g^{(2)}(\\tau)$")
+        plt.text(5, 0.1, label)
+        plt.xlim([-15, 15])
+        plt.ylim(ymin=0)
 
-    print "saving output/corrs%s.png" % label
-    plt.savefig('output/corrs%s.png' % label, bbox_extra_artists=[xlabel], bbox_inches='tight')
+        ppl.legend()
+        xlabel = plt.xlabel("$\\tau (ns)$")
+        plt.ylabel("$g^{(2)}(\\tau)$")
+
+        print "saving output/corrs%s.png" % name
+        plt.savefig('output/corrs%s.png' % name, bbox_extra_artists=[xlabel], bbox_inches='tight')
+
+
+if __name__ == "__main__":
+    main()
