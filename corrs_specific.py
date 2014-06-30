@@ -81,7 +81,7 @@ def main():
         if type == "direct":
             ppl.plot(time, g2.g2c_direct(time, *poptd), label="Direct", linewidth=2)
         elif type == "indirect":
-            ppl.plot(time, g2.g2c_indirect(time, *popti), label="Indirect", linewidth=3)
+            ppl.plot(time, g2.g2c_indirect(time, *popti), label="Indirect", linewidth=2)
 
         plt.text(5, 0.1, label)
         plt.xlim([-15, 15])
