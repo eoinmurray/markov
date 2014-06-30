@@ -49,6 +49,7 @@ def main():
 
         with open('output/fit.md', "a") as file:
             file.write("\n# %s\n" % label)
+            file.write('![](corrs%s.png)\n' % name)
 
             file.write("## Direct\n")
             file.write("\tc1: %1.3lf +- %1.3lf\n" % (poptd[0], perrd[0]))
