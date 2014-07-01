@@ -44,33 +44,33 @@
 	l1: 1.288 +- 0.192
 	l2: 0.304 +- 0.034
 
-# 1_7
+# 1_7 A-D
 ![](specific_corrs1_7.png)
 ## Direct
 	c1: 3.609 +- 0.344
 	l1: 0.787 +- 0.098
 	l2: 0.502 +- 0.092
 
-# 2_7
+# 2_7 A-D
 ![](specific_corrs2_7.png)
 ## Direct
 	c1: 0.287 +- 0.077
 	l1: 0.188 +- 0.067
 	l2: 0.796 +- 0.114
 
-# 3_7
+# 3_7 A-A/I
 ![](specific_corrs3_7.png)
 ## Antidirect
 	l1: 1.076 +- 0.335
 	l2: 1.645 +- 0.733
 
-# 5_7
+# 5_7 A-A
 ![](specific_corrs5_7.png)
 ## Antidirect
 	l1: 0.352 +- 0.059
 	l2: 2.236 +- 1.629
 
-# 6_7
+# 6_7 A-A
 ![](specific_corrs6_7.png)
 ## Antidirect
 	l1: 0.798 +- 0.245
