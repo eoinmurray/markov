@@ -28,7 +28,7 @@ def main():
         name = names[i]
         label = labels[i]
 
-        data = np.loadtxt('input/%s.txt' % name, delimiter=",")
+        data = np.loadtxt('input/rebinned/%s.txt' % name, delimiter=",")
         time = data[:, 0] - zeropoints[i]
         counts = data[:, 1]
 
@@ -37,13 +37,26 @@ def main():
         counts = counts[idx]
         counts_n = counts/counts.mean()
 
-        poptd, pcovd = optimize.curve_fit(g2.g2c_direct, time, counts_n, p0=[4.0, 1.0, 0.5, 0.0])
-        popti, pcovi = optimize.curve_fit(g2.g2c_indirect, time, counts_n, p0=[1.3, 0.4, 1.5, 0.6, 0.0])
-        popta, pcova = optimize.curve_fit(g2.g2c_antidirect, time, counts_n, p0=[1.0, 1.0, 0.0])
+        try:
+            poptd, pcovd = optimize.curve_fit(g2.g2c_direct, time, counts_n, p0=[4.0, 1.0, 0.5, 0.0])
+            perrd = np.sqrt(np.diag(pcovd))
+        except RuntimeError:
+            poptd = np.array([0., 0., 0., 0.])
+            perrd = np.zeros_like(poptd)
 
-        perrd = np.sqrt(np.diag(pcovd))
-        perri = np.sqrt(np.diag(pcovi))
-        perra = np.sqrt(np.diag(pcova))
+        try:
+            popti, pcovi = optimize.curve_fit(g2.g2c_indirect, time, counts_n, p0=[1.3, 0.4, 1.5, 0.6, 0.0])
+            perri = np.sqrt(np.diag(pcovi))
+        except RuntimeError:
+            popti = np.array([0., 0., 0., 0., 0.])
+            perri = np.zeros_like(popti)
+
+        try:
+            popta, pcova = optimize.curve_fit(g2.g2c_antidirect, time, counts_n, p0=[1.0, 1.0, 0.0])
+            perra = np.sqrt(np.diag(pcova))
+        except RuntimeError:
+            popta = np.array([0., 0., 0.])
+            perra = np.zeros_like(popta)
 
         with open('output/fit.md', "a") as file:
             file.write("\n# %s\n" % label)

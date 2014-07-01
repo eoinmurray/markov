@@ -49,7 +49,7 @@ def main():
         label = labels[i]
         type = types[i]
 
-        data = np.loadtxt('input/%s.txt' % name, delimiter=",")
+        data = np.loadtxt('input/rebinned/%s.txt' % name, delimiter=",")
         time = data[:, 0] - zeropoints[i]
         counts = data[:, 1]
 
@@ -59,14 +59,28 @@ def main():
         counts_n = counts/counts.mean()
 
         if type == "direct":
-            poptd, pcovd = optimize.curve_fit(g2.g2c_direct, time, counts_n, p0=p0s[i])
-            perrd = np.sqrt(np.diag(pcovd))
+            try:
+                poptd, pcovd = optimize.curve_fit(g2.g2c_direct, time, counts_n, p0=p0s[i])
+                perrd = np.sqrt(np.diag(pcovd))
+            except RuntimeError:
+                poptd = np.array([0., 0., 0., 0.])
+                perrd = np.zeros_like(poptd)
+
         elif type == "indirect":
-            popti, pcovi = optimize.curve_fit(g2.g2c_indirect, time, counts_n, p0=p0s[i])
-            perri = np.sqrt(np.diag(pcovi))
+            try:
+                popti, pcovi = optimize.curve_fit(g2.g2c_indirect, time, counts_n, p0=p0s[i])
+                perri = np.sqrt(np.diag(pcovi))
+            except RuntimeError:
+                popti = np.array([0., 0., 0., 0., 0.])
+                perri = np.zeros_like(popti)
+
         elif type == "antidirect":
-            popta, pcova = optimize.curve_fit(g2.g2c_antidirect, time, counts_n, p0=p0s[i])
-            perra = np.sqrt(np.diag(pcova))
+            try:
+                popta, pcova = optimize.curve_fit(g2.g2c_antidirect, time, counts_n, p0=p0s[i])
+                perra = np.sqrt(np.diag(pcova))
+            except RuntimeError:
+                popta = np.array([0., 0., 0.])
+                perra = np.zeros_like(popta)
 
         with open('output/fit_specific.md', "a") as file:
             file.write("\n# %s\n" % label)
