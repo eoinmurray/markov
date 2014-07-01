@@ -12,8 +12,9 @@ np.seterr(all="ignore")
 
 
 names = ['1_3', '3_5', '2_3', '1_6', '2_6', '4_5', '1_7', '2_7', '3_7', '5_7', '6_7']
-states = ['XXT5', 'XXT1', 'XP', 'XX', 'X', 'XT5', '', '', '', '', '', '']
-labels = ['1_3 A-I', '3_5 A-I', '2_3 A-D', '1_6 A-D', '2_6 A-A/I', '4_5 A-D', '', '', '', '', '']
+labels = ['1_3 A-I', '3_5 A-I', '2_3 A-D', '1_6 A-D', '2_6 A-A/I', '4_5 A-D',
+          '1_7', '2_7', '3_7', '5_7', '6_7']
+
 zeropoints = [171.6, 171.0, 171.5, 170.5, 171.1, 171.2, 171.2, 171.2, 171.2, 171.2, 171.2]
 
 
@@ -79,8 +80,8 @@ def main():
 
         # just plotting stuff now
         plt.close()
-        ppl.plot(time, counts_n, alpha=0.5)
-        ppl.plot(time, g2.g2c_direct(time, *poptd), label="Direct", linewidth=4)
+        ppl.plot(time, counts_n, linewidth=4, alpha=0.3)
+        ppl.plot(time, g2.g2c_direct(time, *poptd), label="Direct", linewidth=5)
         ppl.plot(time, g2.g2c_indirect(time, *popti), label="Indirect", linewidth=2)
         ppl.plot(time, g2.g2c_antidirect(time, *popta), label="Antidirect", linewidth=2)
 
