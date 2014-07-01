@@ -1,11 +1,9 @@
 import matplotlib.pyplot as plt
 
-# try:
-import prettyplotlib as ppl
-from prettyplotlib import brewer2mpl
-# except ImportError:
-#     ppl = plt
-
+try:
+    import prettyplotlib as ppl
+except ImportError:
+    ppl = plt
 
 import numpy as np
 import scipy.optimize as optimize
@@ -13,10 +11,10 @@ import g2 as g2
 np.seterr(all="ignore")
 
 
-names = ['1_3', '3_5', '2_3', '1_6', '2_6', '4_5']
-states = ['XXT5', 'XXT1', 'XP', 'XX', 'X', 'XT5']
-labels = ['1_3 A-I', '3_5 A-I', '2_3 A-D', '1_6 A-D', '2_6 A-A/I', '4_5 A-D']
-zeropoints = [171.6, 171.0, 171.5, 170.5, 171.1, 171.2]
+names = ['1_3', '3_5', '2_3', '1_6', '2_6', '4_5', '1_7', '2_7', '3_7', '5_7', '6_7']
+states = ['XXT5', 'XXT1', 'XP', 'XX', 'X', 'XT5', '', '', '', '', '', '']
+labels = ['1_3 A-I', '3_5 A-I', '2_3 A-D', '1_6 A-D', '2_6 A-A/I', '4_5 A-D', '', '', '', '', '']
+zeropoints = [171.6, 171.0, 171.5, 170.5, 171.1, 171.2, 171.2, 171.2, 171.2, 171.2, 171.2]
 
 
 def main():
@@ -25,7 +23,7 @@ def main():
         file.write("")
 
     # for i in [5]:
-    for i in [0, 1, 2, 3, 4, 5]:
+    for i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
 
         name = names[i]
         label = labels[i]
@@ -68,9 +66,9 @@ def main():
 
         # just plotting stuff now
         plt.close()
-        ppl.plot(time, counts_n)
-        ppl.plot(time, g2.g2c_direct(time, *poptd), label="Direct", linewidth=2)
-        ppl.plot(time, g2.g2c_indirect(time, *popti), label="Indirect", linewidth=3)
+        ppl.plot(time, counts_n, alpha=0.5)
+        ppl.plot(time, g2.g2c_direct(time, *poptd), label="Direct", linewidth=4)
+        ppl.plot(time, g2.g2c_indirect(time, *popti), label="Indirect", linewidth=2)
         ppl.plot(time, g2.g2c_antidirect(time, *popta), label="Antidirect", linewidth=2)
 
         plt.text(5, 0.1, label)
