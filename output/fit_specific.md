@@ -53,10 +53,11 @@
 
 # 2_7 A-D
 ![](specific/specific_corrs2_7.png)
-## Direct
-	c1: 0.287 +- 0.077
-	l1: 0.188 +- 0.067
-	l2: 0.796 +- 0.114
+## Indirect
+	c1: 0.290 +- 0.082
+	l1: 0.188 +- 0.068
+	l3: 33.013 +- 319.681
+	l2: 0.818 +- 0.239
 
 # 3_7 A-A/I
 ![](specific/specific_corrs3_7.png)
