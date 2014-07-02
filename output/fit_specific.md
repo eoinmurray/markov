@@ -29,7 +29,7 @@
 	l1: 0.757 +- 0.108
 	l2: 0.413 +- 0.046
 
-# 2_6 A-A/I
+# 2_6 A-I
 ![](specific/specific_corrs2_6.png)
 ## Indirect
 	c1: 0.246 +- 0.093
@@ -51,7 +51,7 @@
 	l1: 0.787 +- 0.098
 	l2: 0.502 +- 0.092
 
-# 2_7 A-D
+# 2_7 A-I
 ![](specific/specific_corrs2_7.png)
 ## Indirect
 	c1: 0.290 +- 0.082
@@ -59,7 +59,7 @@
 	l3: 33.013 +- 319.681
 	l2: 0.818 +- 0.239
 
-# 3_7 A-A/I
+# 3_7 A-A
 ![](specific/specific_corrs3_7.png)
 ## Antidirect
 	l1: 1.076 +- 0.335

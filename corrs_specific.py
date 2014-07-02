@@ -17,8 +17,8 @@ types = ['indirect', 'indirect', 'direct', 'direct',
          'antidirect', 'antidirect', 'antidirect']
 
 labels = ['1_3 A-I', '3_5 A-I', '2_3 A-D', '1_6 A-D',
-          '2_6 A-A/I', '4_5 A-D', '1_7 A-D', '2_7 A-D',
-          '3_7 A-A/I', '5_7 A-A', '6_7 A-A']
+          '2_6 A-I', '4_5 A-D', '1_7 A-D', '2_7 A-I',
+          '3_7 A-A', '5_7 A-A', '6_7 A-A']
 
 
 names = ['1_3', '3_5', '2_3', '1_6', '2_6', '4_5', '1_7', '2_7', '3_7', '5_7', '6_7']
