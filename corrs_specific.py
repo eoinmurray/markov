@@ -85,7 +85,7 @@ def main():
 
         with open('output/fit_specific.md', "a") as file:
             file.write("\n# %s\n" % label)
-            file.write('![](specific_corrs%s.png)\n' % name)
+            file.write('![](specific/specific_corrs%s.png)\n' % name)
 
             if type == "direct":
                 file.write("## Direct\n")
@@ -123,8 +123,8 @@ def main():
         xlabel = plt.xlabel("$\\tau (ns)$")
         plt.ylabel("$g^{(2)}(\\tau)$")
 
-        print "saving output/corrs%s.png" % name
-        plt.savefig('output/specific_corrs%s.png' % name, bbox_extra_artists=[xlabel],
+        print "saving specific fits %s" % name
+        plt.savefig('output/specific/specific_corrs%s.png' % name, bbox_extra_artists=[xlabel],
                     bbox_inches='tight')
 
 

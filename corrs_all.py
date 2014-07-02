@@ -61,7 +61,7 @@ def main():
 
         with open('output/fit.md', "a") as file:
             file.write("\n# %s\n" % label)
-            file.write('![](corrs%s.png)\n' % name)
+            file.write('![](all/corrs%s.png)\n' % name)
 
             file.write("## Direct\n")
             file.write("\tc1: %1.3lf +- %1.3lf\n" % (poptd[0], perrd[0]))
@@ -93,8 +93,8 @@ def main():
         xlabel = plt.xlabel("$\\tau (ns)$")
         plt.ylabel("$g^{(2)}(\\tau)$")
 
-        print "saving output/corrs%s.png" % name
-        plt.savefig('output/corrs%s.png' % name, bbox_extra_artists=[xlabel], bbox_inches='tight')
+        print "saving all fits %s" % name
+        plt.savefig('output/all/corrs%s.png' % name, bbox_extra_artists=[xlabel], bbox_inches='tight')
 
 
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ plt.setp(ax.spines.values(), alpha=0.5)
 plt.tick_params(axis='both', which='major', labelsize=16)
 # plt.tight_layout()
 
-data = np.loadtxt('./in/raw/A1208 RTD spectrum.dat')
+data = np.loadtxt('input/raw/A1208 RTD spectrum.dat')
 
 wavelength = data[:, 0]
 intensity = data[:, 1]
@@ -27,6 +27,7 @@ max_intensity = 1.2*intensity.max()
 energy = (1000)*1239.84187/wavelength  # eV from wiki page on electronvolt
 
 peak_positions = [
+    1386.3,
     1386.85,
     1387.3,
     1390.58,
@@ -35,16 +36,27 @@ peak_positions = [
     1392.55,
 ]
 
+# names = [
+#     "$X_{T5/2}+$",
+#     "$X$",
+#     "$XX$",
+#     "$X+$",
+#     "$XX_{T1/2}+$",
+#     "$XX_{T5/2}+$"
+# ]
+
 names = [
-    "$X_{T5/2}+$",
-    "$X$",
-    "$XX$",
-    "$X+$",
-    "$XX_{T1/2}+$",
-    "$XX_{T5/2}+$"
+    "7",
+    "6",
+    "5",
+    "4",
+    "3",
+    "2",
+    "1"
 ]
 
-heights = [0.5, 0.7, 0.5, 0.9, 0.5, 0.7]
+
+heights = [0.3, 0.5, 0.7, 0.5, 0.9, 0.5, 0.7]
 
 for i in xrange(len(peak_positions)):
     pos = peak_positions[i]
@@ -55,13 +67,6 @@ for i in xrange(len(peak_positions)):
 plt.fill_between(energy, intensity, color=set2[4])
 
 
-def gauss(x, *p):
-    a = 1400
-    b = 1391.2
-    c = p[0]
-    d = 37
-    return a*np.exp(-((x-b)**2)/(2*c**2)) + d
-
 plt.xlim([1385.5, 1393])
 plt.ylim([0, max_intensity])
 
@@ -70,5 +75,4 @@ plt.yticks([])
 xlabel = plt.xlabel("Energy ($meV$)")
 plt.ylabel("Intensity (a.u.)")
 
-plt.savefig('./temp/spectrum.png', bbox_extra_artists=[xlabel], bbox_inches='tight')
-plt.savefig('./temp/spectrum.pdf', bbox_extra_artists=[xlabel], bbox_inches='tight')
+plt.savefig('output/spectrum.png', bbox_extra_artists=[xlabel], bbox_inches='tight')
