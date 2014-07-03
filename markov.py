@@ -52,6 +52,7 @@ class TransitionMatrix():
         self.geh = geh
 
         # lifetimes.
+        
         self.t001 = t001  # excited hole relaxation time.
         self.t110 = 1.66  # exciton lifetime.
         self.t120 = 1.9  # ground trion lifetime.
