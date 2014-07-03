@@ -5,7 +5,7 @@ types = ['indirect', 'indirect', 'direct', 'direct',
          'indirect', 'direct', 'direct', 'indirect',
          'antidirect', 'antidirect', 'antidirect', 'indirect']
 
-zeropoints = [171.6, 171.0, 171.5, 170.5, 171.1, 171.2, 171.2, 171.2, 171.2, 171.2, 171.2, 171.2]
+zeropoints = [171.6, 171.0, 171.5, 170.5, 171.1, 171.2, 171.2, 171.2, 171.2, 171.2, 171.2, 800-171.2]
 
 
 peaks = []
