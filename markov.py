@@ -215,4 +215,6 @@ if __name__ == "__main__":
         plt.text(3, 0.3, '%s' % name)
         plt.ylim(ymin=0)
         plt.xlim([-15, 15])
+
+        print 'saving output/spectral/%s.png' % name
         plt.savefig('output/spectral/%s.png' % name, bbox_inches='tight')
