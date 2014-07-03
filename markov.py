@@ -39,23 +39,20 @@ chargedbiexciton = 10
 
 class TransitionMatrix():
 
-    def __init__(self):
+    def __init__(self, te=1.0, th=0.4, tpe=0.8, tph=40.0, gsf=4.0, geh=10.0, t001=0.001):
         # electron hole capture times.
-        self.te = 1.
-        self.th = 0.4
-
+        self.te = te
+        self.th = th
         # electron hole capture times in positive QD.
-        self.tpe = 0.8
-        self.tph = 40.0
-
+        self.tpe = tpe
+        self.tph = tph
         # spin flip time
-        self.gsf = 4.0
-
+        self.gsf = gsf
         # time for ground hole to be excited.
-        self.geh = 10
+        self.geh = geh
 
         # lifetimes.
-        self.t001 = 0.001  # excited hole relaxation time.
+        self.t001 = t001  # excited hole relaxation time.
         self.t110 = 1.66  # exciton lifetime.
         self.t120 = 1.9  # ground trion lifetime.
         self.t1116 = 1.05  # hot trion 1 relax to ground hole (emission #6).
