@@ -182,7 +182,7 @@ if __name__ == "__main__":
         name = '%s_%s' % (peaks[i][0], peaks[i][1])
         with open('output/markov.md', "a") as file:
             file.write('\n# %s' % name)
-            file.write('\n![](output/spectral/%s.png)\n' % name)
+            file.write('\n![](spectral/%s.png)\n' % name)
             file.write('\n## tau < 0\n\n')
             file.write('|  # |            a           |          l            |\n')
             file.write('|----|------------------------|-----------------------|\n')
