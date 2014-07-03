@@ -1,8 +1,14 @@
+"""
+    markov.py
+
+    Containes the TransitionMatrix class and the MarkovExpansionState class.
+"""
+
+
 import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
 import brewer2mpl
-from matrix import *
 
 set2 = brewer2mpl.get_map('Spectral', 'Diverging', 5).mpl_colors
 np.seterr(all="ignore")
@@ -16,17 +22,85 @@ def gauss(t):
     return a*np.exp(-((t-b)**2)/(2*c**2))
 
 
-class MarkovExpansionState():
+# States
+empty = 0
+groundhole = 1
+twohole = 2
+groundelectron = 3
+excitedhole = 4
+exciton = 5
+groundtrion = 6
+hottrion1 = 7  # state that emits #6 and #7 and spin flips.
+hottrion2 = 8  # state that relaxes quickly to groundtrion.
+biexciton = 9
+chargedbiexciton = 10
+
+
+class TransitionMatrix():
+
+    def __init__(self):
+        # electron hole capture times.
+        self.te = 1
+        self.th = 1
+
+        # electron hole capture times in positive QD.
+        self.tpe = 1
+        self.tph = 1
+
+        # spin flip time
+        self.gsf = 1
+
+        # time for ground hole to be excited.
+        self.geh = 1
+
+        # lifetimes.
+        self.t001 = 0.01  # excited hole relaxation time.
+        self.t110 = 1  # exciton lifetime.
+        self.t120 = 1  # ground trion lifetime.
+        self.t1116 = 1  # hot trion 1 relax to ground hole (emission #6).
+        self.t1117 = 1  # hot trion 1 relax to excited hole (emission #7).
+        self.t220 = 1  # biexciton lifetime.
+        self.t2211 = 1  # charged biexciton to hot trion 1 (emision #1).
+        self.t2212 = 1  # charged biexciton to hot trion 2 (emision #2).
+
+        s = self
+        self.T = np.matrix([
+            [-1.0/s.te-1.0/s.th, 0, 0, 0, 0, 1.0/s.t110, 0, 0, 0, 0, 0],
+            [1.0/s.te, -1.0/s.th, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1.0/s.th, 0, -1.0/s.tpe - 1.0/s.tph, 0, 1.0/s.t001, 0, 1.0/s.t120, 1.0/s.t1116, 0, 0, 0],
+            [0, 0, 1.0/s.tph, -1.0/s.tpe, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1.0/s.t001, 0, 0, 1.0/s.t1117, 0, 0, 0],
+            [0, 1.0/s.th, 1.0/s.tpe, 0, 0, -1.0/s.th-1.0/s.t110, 0, 0, 0, 1.0/s.t220, 0],
+            [0, 0, 0, 1.0/s.tpe, 0, 1.0/s.th, -1.0/s.t120-1.0/s.geh-1.0/s.tpe, 1.0/s.gsf, 1.0/s.t001, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1.0/s.geh, -1.0/s.t1116-1.0/s.t1117-1.0/s.gsf, 0, 0, (2.0/3)*(1.0/s.t2211)],
+            [0, 0, 0, 0, 0, 0, 0, 0, -1.0/s.t001, 0, (1.0/3)*(1.0/s.t2212)],
+            [0, 0, 0, 0, 0, 0, 1.0/s.tpe, 0, 0, -1.0/s.th-1.0/s.t220, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0/s.th, -(2.0/3)*(1.0/s.t2211)-(1.0/3)*(1.0/s.t2212)]
+        ])
+
+        self.matrix = self.T
+
+        e = linalg.eig(self.matrix)
+        self.evals = e[0]
+        self.evecs = e[1]
+
+    def __getitem__(self, key, val):
+        return getattr(self, key)
+
+
+class MarkovExpansionState(TransitionMatrix):
 
     def __init__(self, statei, statef):
+        TransitionMatrix.__init__(self)
+
         self.statei = statei
         self.statef = statef
 
-        evecs = linalg.eig(T)[1]
-        evals = linalg.eig(T)[0]
+        evecs = self.evecs
+        evals = self.evals
 
-        a = T
-        b = np.zeros(T.shape[0])
+        a = self.matrix
+        b = np.zeros(self.matrix.shape[0])
         b[statei] = 1
         b = np.asmatrix(b).T
         c = linalg.solve(evecs, b)
@@ -42,10 +116,10 @@ class MarkovExpansionState():
         self.a = np.array(intensities).flatten()
         self.l = np.array(eigenvalues).flatten()
 
-        self.a.real[np.abs(self.a.real) < 1e-3] = 0
-        self.a.imag[np.abs(self.a.imag) < 1e-3] = 0
-        self.l.real[np.abs(self.l.real) < 1e-3] = 0
-        self.l.imag[np.abs(self.l.imag) < 1e-3] = 0
+        # we need to set the small eigenvalues to zero
+        # in order to find the stationary eigenvalue
+        self.l.real[np.abs(self.l.real) < 1e-5] = 0
+        self.l.imag[np.abs(self.l.imag) < 1e-5] = 0
 
         self.asteady = self.a[self.l == 0][0].real
 
@@ -59,17 +133,12 @@ class MarkovExpansionState():
         a = self.a
         l = self.l
 
-        a.real[np.abs(a.real) < 1e-3] = 0
-        a.imag[np.abs(a.imag) < 1e-3] = 0
-        l.real[np.abs(l.real) < 1e-3] = 0
-        l.imag[np.abs(l.imag) < 1e-3] = 0
-
         asteady = a[l == 0][0].real
 
         s = []
         for j in xrange(a.size):
-            a_s = "a: %1.3lf + %1.3lfi" % (a[j].real/asteady, a[j].imag/asteady)
-            l_s = "l: %1.3lf + %1.3lfi \t%d" % (l[j].real, l[j].imag, 1+j)
+            a_s = "{:3d} |\t{:8.1f} + {:8.1f}i |" .format(1+j, a[j].real/asteady, a[j].imag/asteady)
+            l_s = "{:8.1f} + {:8.1f}i |" .format(l[j].real, l[j].imag)
             s.append(a_s + "\t" + l_s)
 
         return "\n".join(s)
@@ -79,73 +148,46 @@ class MarkovExpansionState():
 
 
 if __name__ == "__main__":
+    with open('output/markov.md', "w") as file:
+        file.write("")
 
-    labels = ["XXT5 -> X+", "XXT1 -> X+", "XXT5 -> XT5", "XXT1 -> XT5", "X+ -> X", "XX -> X"]
+    TM = TransitionMatrix()
+
+    for i in range(11):
+        assert TM.matrix[:, i].sum() == 0.0, "Column %s does not sum to zero." % i
+    print "All columns sum to 0.0"
+
     t = np.linspace(0, 20, 400)
     tau = np.concatenate((-t[::-1], t[1:-1]), axis=0)
-
-    # XXT5 -> X+
-    state_pos = MarkovExpansionState(excitedtrion, posexciton)
-    state_neg = MarkovExpansionState(groundhole, chargedbiexciton)
-    gxxt5_xp = np.concatenate((state_neg(t)[::-1], state_pos(t)[1:-1]), axis=0)
-
-    # XX -> X
-    state_pos = MarkovExpansionState(exciton, exciton)
-    state_neg = MarkovExpansionState(empty, biexciton)
-    gxx_x = np.concatenate((state_neg(t)[::-1], state_pos(t)[1:-1]), axis=0)
-
-    # XXT5 -> XT5
-    state_pos = MarkovExpansionState(excitedtrion, excitedtrion)
-    state_neg = MarkovExpansionState(excitedhole, chargedbiexciton)
-    gxxt5_xt5 = np.concatenate((state_neg(t)[::-1], state_pos(t)[1:-1]), axis=0)
-
-    # XXT1 -> XT5
-    state_pos = MarkovExpansionState(posexciton, excitedtrion)
-    state_neg = MarkovExpansionState(excitedhole, chargedbiexciton)
-    gxxt1_xt5 = np.concatenate((state_neg(t)[::-1], state_pos(t)[1:-1]), axis=0)
-
-    # XXT1 -> XP
-    state_pos = MarkovExpansionState(posexciton, posexciton)
-    state_neg = MarkovExpansionState(groundhole, chargedbiexciton)
-    gxxt1_xp = np.concatenate((state_neg(t)[::-1], state_pos(t)[1:-1]), axis=0)
-
-    # XP -> X
-    state_pos = MarkovExpansionState(groundhole, exciton)
-    state_neg = MarkovExpansionState(empty, posexciton)
-    gxp_x = np.concatenate((state_neg(t)[::-1], state_pos(t)[1:-1]), axis=0)
-
-    # lets convolute all our g's.
     gaussed = gauss(tau)
-    gxxt5_xp = np.convolve(gaussed/gaussed.sum(), gxxt5_xp, 'same')
-    gxx_x = np.convolve(gaussed/gaussed.sum(), gxx_x, 'same')
-    gxxt5_xt5 = np.convolve(gaussed/gaussed.sum(), gxxt5_xt5, 'same')
-    gxxt1_xt5 = np.convolve(gaussed/gaussed.sum(), gxxt1_xt5, 'same')
-    gxxt1_xp = np.convolve(gaussed/gaussed.sum(), gxxt1_xp, 'same')
-    gxp_x = np.convolve(gaussed/gaussed.sum(), gxp_x, 'same')
 
-    # make the plots
-    def makePlot(x, y, l):
-        plt.plot(x, y)
-        plt.text(3, 0.3, l)
-        plt.ylim(ymin=0)
-        plt.xlim([-15, 15])
+    peaks = [[1, 3], [3, 5], [2, 3], [1, 6], [2, 6], [4, 5], [1, 7], [2, 7], [3, 7], [5, 7], [6, 7]]
 
-    plt.subplot(321)
-    makePlot(tau, gxxt5_xp, "$XXT5 \\rightarrow XP$")
+    pairs = [
+        [chargedbiexciton, hottrion1],  # 1
+        [chargedbiexciton, hottrion2],  # 2
+        [groundtrion, groundhole],  # 3
+        [biexciton, exciton],  # 4
+        [exciton, empty],  # 5
+        [hottrion1, groundhole],  # 6
+        [hottrion1, excitedhole],  # 7
+    ]
 
-    plt.subplot(322)
-    makePlot(tau, gxx_x, "$XX \\rightarrow X$")
+    for i in range(len(peaks)):
+        print i
+        ppair = pairs[peaks[i][0]-1]
+        npair = pairs[peaks[i][1]-1]
+        pspec = MarkovExpansionState(ppair[0], ppair[1])
+        nspec = MarkovExpansionState(npair[0], npair[1])
 
-    plt.subplot(323)
-    makePlot(tau, gxxt5_xt5, "$XXT5 \\rightarrow XT5$")
-
-    plt.subplot(324)
-    makePlot(tau, gxxt1_xt5, "$XXT1 \\rightarrow XT5$")
-
-    plt.subplot(325)
-    makePlot(tau, gxxt1_xp, "$XXT1 \\rightarrow XP$")
-
-    plt.subplot(326)
-    makePlot(tau, gxp_x, "$XP \\rightarrow X$")
-
-    plt.savefig('output/markov.png', bbox_inches='tight')
+        with open('output/markov.md', "a") as file:
+            file.write('\n# %s->%s' % (peaks[i][0], peaks[i][1]))
+            file.write('\n## tau < 0\n')
+            file.write('  # |            a           |          l            |\n')
+            file.write('  --|------------------------|-----------------------|\n')
+            file.write(str(nspec))
+            file.write('\n## tau > 0\n')
+            file.write('  # |            a           |          l            |\n')
+            file.write('  --|------------------------|-----------------------|\n')
+            file.write(str(pspec))
+            file.write('\n')
