@@ -51,7 +51,7 @@ class TransitionMatrix():
         self.gsf = 0.44
 
         # time for ground hole to be excited.
-        self.geh = 1
+        self.geh = 10
 
         # lifetimes.
         self.t001 = 0.001  # excited hole relaxation time.
