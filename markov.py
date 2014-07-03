@@ -181,8 +181,8 @@ if __name__ == "__main__":
         nspec = MarkovExpansionState(npair[0], npair[1])
         name = '%s_%s' % (peaks[i][0], peaks[i][1])
         with open('output/markov.md', "a") as file:
-            file.write('\n# %s' % name)
-            file.write('\n![](spectral/%s.png)\n' % name)
+            file.write('\n# %s\n' % name)
+            file.write('![](spectral/%s.png)' % name)
             file.write('\n## tau < 0\n\n')
             file.write('|  # |            a           |          l            |\n')
             file.write('|----|------------------------|-----------------------|\n')

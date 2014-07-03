@@ -1,7 +1,6 @@
 
 # 1_3
-![](output/spectral/1_3.png)
-
+![](spectral/1_3.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -36,8 +35,7 @@
 
 
 # 3_5
-![](output/spectral/3_5.png)
-
+![](spectral/3_5.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -72,8 +70,7 @@
 
 
 # 2_3
-![](output/spectral/2_3.png)
-
+![](spectral/2_3.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -108,8 +105,7 @@
 
 
 # 1_6
-![](output/spectral/1_6.png)
-
+![](spectral/1_6.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -144,8 +140,7 @@
 
 
 # 2_6
-![](output/spectral/2_6.png)
-
+![](spectral/2_6.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -180,8 +175,7 @@
 
 
 # 4_5
-![](output/spectral/4_5.png)
-
+![](spectral/4_5.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -216,8 +210,7 @@
 
 
 # 1_7
-![](output/spectral/1_7.png)
-
+![](spectral/1_7.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -252,8 +245,7 @@
 
 
 # 2_7
-![](output/spectral/2_7.png)
-
+![](spectral/2_7.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -288,8 +280,7 @@
 
 
 # 3_7
-![](output/spectral/3_7.png)
-
+![](spectral/3_7.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -324,8 +315,7 @@
 
 
 # 5_7
-![](output/spectral/5_7.png)
-
+![](spectral/5_7.png)
 ## tau < 0
 
 |  # |            a           |          l            |
@@ -360,8 +350,7 @@
 
 
 # 6_7
-![](output/spectral/6_7.png)
-
+![](spectral/6_7.png)
 ## tau < 0
 
 |  # |            a           |          l            |
