@@ -174,11 +174,18 @@ if __name__ == "__main__":
     ]
 
     for i in range(len(peaks)):
-        print i
         ppair = pairs[peaks[i][0]-1]
         npair = pairs[peaks[i][1]-1]
-        pspec = MarkovExpansionState(ppair[0], ppair[1])
-        nspec = MarkovExpansionState(npair[0], npair[1])
+
+        stateip = ppair[0]
+        statefp = ppair[1]
+
+        statein = npair[0]
+        statefn = npair[1]
+
+        pspec = MarkovExpansionState(statefp, statein)
+        nspec = MarkovExpansionState(statefn, stateip)
+
         name = '%s_%s' % (peaks[i][0], peaks[i][1])
         with open('output/markov.md', "a") as file:
             file.write('\n# %s\n' % name)
