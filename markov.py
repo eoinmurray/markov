@@ -9,6 +9,7 @@ import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
 import brewer2mpl
+from names import *
 
 set2 = brewer2mpl.get_map('Spectral', 'Diverging', 5).mpl_colors
 np.seterr(all="ignore")
@@ -160,8 +161,6 @@ if __name__ == "__main__":
     t = np.linspace(0, 20, 400)
     tau = np.concatenate((-t[::-1], t[1:-1]), axis=0)
     gaussed = gauss(tau)
-
-    peaks = [[1, 3], [3, 5], [2, 3], [1, 6], [2, 6], [4, 5], [1, 7], [2, 7], [3, 7], [5, 7], [6, 7]]
 
     pairs = [
         [chargedbiexciton, hottrion1],  # 1

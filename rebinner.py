@@ -1,6 +1,5 @@
 import numpy as np
-
-names = ['1_3', '3_5', '2_3', '1_6', '2_6', '4_5', '1_7', '2_7', '3_7', '5_7', '6_7']
+from names import *
 
 
 def main():
@@ -17,6 +16,21 @@ def main():
 
         print 'saving input/rebinned/%s.txt' % name
         np.savetxt('input/rebinned/%s.txt' % name, export_data, fmt="%1.3lf,%1.3lf,0.000,0.000,0.000")
+
+
+def reverse_axis():
+    name = '5_7'
+    data = np.loadtxt('input/%s.txt' % name, delimiter=",")
+
+    time = data[:, 0]
+    counts = data[:, 1][::-1]
+
+    export_data = np.vstack((time, counts)).T
+
+    name = '7_5'
+    print 'saving reversed input/%s.txt' % name
+    np.savetxt('input/%s.txt' % name, export_data, fmt="%1.3lf,%1.3lf,0.000,0.000,0.000")
+
 
 if __name__ == "__main__":
     main()
