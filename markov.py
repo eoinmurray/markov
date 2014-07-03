@@ -49,7 +49,7 @@ class TransitionMatrix():
         self.tph = 40.0
 
         # spin flip time
-        self.gsf = 0.44
+        self.gsf = 4.0
 
         # time for ground hole to be excited.
         self.geh = 10
@@ -138,11 +138,23 @@ class MarkovExpansionState(TransitionMatrix):
 
         s = []
         for j in xrange(a.size):
-            a_s = "\t{:3d} | a: {:8.3f} + {:8.3f}i " .format(1+j, a[j].real/asteady, a[j].imag/asteady)
-            l_s = " l: {:8.3f} + {:8.3f}i " .format(l[j].real, l[j].imag)
-            s.append(a_s + "\t" + l_s)
+            ar = a[j].real/asteady
+            ai = a[j].imag/asteady
+            lr = l[j].real
+            li = l[j].imag
+
+            if self.filter(ar, ai, lr, li):
+                a_s = "\t{:3d} | a: {:8.3f} + {:8.3f}i \t l: {:8.3f} + {:8.3f}i" .format(1+j, ar, ai, lr, li)
+                s.append(a_s)
 
         return "\n".join(s)
+
+    def filter(self, ar, ai, lr, li):
+        if ar < 0.1 and ai < 0.1:
+            return False
+        if lr > 5.0 and li > 5.0:
+            return False
+        return True
 
     def __call__(self, t):
         return self._foo(t)
@@ -189,11 +201,11 @@ if __name__ == "__main__":
         with open('output/markov.md', "a") as file:
             file.write('\n# %s\n' % name)
             file.write('![](spectral/%s.png)' % name)
-            file.write('\n## tau < 0\n\n')
-            file.write(str(nspec))
-            file.write('\n\n## tau > 0\n\n')
+            file.write('\n\n## tau > 0\n')
             file.write(str(pspec))
-            file.write('\n\n')
+            file.write('\n## tau < 0\n')
+            file.write(str(nspec))
+            file.write('\n')
 
         plt.close()
         g2 = np.concatenate((nspec(t)[::-1], pspec(t)[1:-1]), axis=0)
