@@ -138,8 +138,8 @@ class MarkovExpansionState(TransitionMatrix):
 
         s = []
         for j in xrange(a.size):
-            a_s = "|{:3d} |\t {:8.1f} + {:8.1f}i |" .format(1+j, a[j].real/asteady, a[j].imag/asteady)
-            l_s = " {:8.1f} + {:8.1f}i |" .format(l[j].real, l[j].imag)
+            a_s = "\t{:3d} | a: {:8.3f} + {:8.3f}i " .format(1+j, a[j].real/asteady, a[j].imag/asteady)
+            l_s = " l: {:8.3f} + {:8.3f}i " .format(l[j].real, l[j].imag)
             s.append(a_s + "\t" + l_s)
 
         return "\n".join(s)
@@ -190,12 +190,8 @@ if __name__ == "__main__":
             file.write('\n# %s\n' % name)
             file.write('![](spectral/%s.png)' % name)
             file.write('\n## tau < 0\n\n')
-            file.write('|  # |            a           |          l            |\n')
-            file.write('|----|------------------------|-----------------------|\n')
             file.write(str(nspec))
             file.write('\n\n## tau > 0\n\n')
-            file.write('|  # |            a           |          l            |\n')
-            file.write('|----|------------------------|-----------------------|\n')
             file.write(str(pspec))
             file.write('\n\n')
 
