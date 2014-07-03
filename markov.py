@@ -179,9 +179,10 @@ if __name__ == "__main__":
         npair = pairs[peaks[i][1]-1]
         pspec = MarkovExpansionState(ppair[0], ppair[1])
         nspec = MarkovExpansionState(npair[0], npair[1])
-
+        name = '%s_%s' % (peaks[i][0], peaks[i][1])
         with open('output/markov.md', "a") as file:
-            file.write('\n# %s->%s' % (peaks[i][0], peaks[i][1]))
+            file.write('\n# %s' % name)
+            file.write('\n![](output/spectral/%s.png)\n' % name)
             file.write('\n## tau < 0\n\n')
             file.write('|  # |            a           |          l            |\n')
             file.write('|----|------------------------|-----------------------|\n')
@@ -193,4 +194,11 @@ if __name__ == "__main__":
             file.write('\n\n')
 
         plt.close()
-        plt.plot()
+        g2 = np.concatenate((nspec(t)[::-1], pspec(t)[1:-1]), axis=0)
+        g2c = np.convolve(gaussed/gaussed.sum(), g2, 'same')
+        plt.plot(tau, g2)
+        plt.plot(tau, g2c)
+        plt.text(3, 0.3, '%s' % name)
+        plt.ylim(ymin=0)
+        plt.xlim([-15, 15])
+        plt.savefig('output/spectral/%s.png' % name, bbox_inches='tight')
