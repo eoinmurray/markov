@@ -40,28 +40,28 @@ class TransitionMatrix():
 
     def __init__(self):
         # electron hole capture times.
-        self.te = 1
-        self.th = 1
+        self.te = 1.
+        self.th = 0.4
 
         # electron hole capture times in positive QD.
-        self.tpe = 1
-        self.tph = 1
+        self.tpe = 0.8
+        self.tph = 40.0
 
         # spin flip time
-        self.gsf = 1
+        self.gsf = 0.44
 
         # time for ground hole to be excited.
         self.geh = 1
 
         # lifetimes.
-        self.t001 = 0.01  # excited hole relaxation time.
-        self.t110 = 1  # exciton lifetime.
-        self.t120 = 1  # ground trion lifetime.
-        self.t1116 = 1  # hot trion 1 relax to ground hole (emission #6).
-        self.t1117 = 1  # hot trion 1 relax to excited hole (emission #7).
-        self.t220 = 1  # biexciton lifetime.
-        self.t2211 = 1  # charged biexciton to hot trion 1 (emision #1).
-        self.t2212 = 1  # charged biexciton to hot trion 2 (emision #2).
+        self.t001 = 0.001  # excited hole relaxation time.
+        self.t110 = 1.66  # exciton lifetime.
+        self.t120 = 1.9  # ground trion lifetime.
+        self.t1116 = 1.05  # hot trion 1 relax to ground hole (emission #6).
+        self.t1117 = 1.05  # hot trion 1 relax to excited hole (emission #7).
+        self.t220 = 0.9  # biexciton lifetime.
+        self.t2211 = 1.05  # charged biexciton to hot trion 1 (emision #1).
+        self.t2212 = 1.1  # charged biexciton to hot trion 2 (emision #2).
 
         s = self
         self.T = np.matrix([
