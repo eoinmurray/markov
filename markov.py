@@ -137,8 +137,8 @@ class MarkovExpansionState(TransitionMatrix):
 
         s = []
         for j in xrange(a.size):
-            a_s = "{:3d} |\t{:8.1f} + {:8.1f}i |" .format(1+j, a[j].real/asteady, a[j].imag/asteady)
-            l_s = "{:8.1f} + {:8.1f}i |" .format(l[j].real, l[j].imag)
+            a_s = "|{:3d} |\t {:8.1f} + {:8.1f}i |" .format(1+j, a[j].real/asteady, a[j].imag/asteady)
+            l_s = " {:8.1f} + {:8.1f}i |" .format(l[j].real, l[j].imag)
             s.append(a_s + "\t" + l_s)
 
         return "\n".join(s)
@@ -182,12 +182,15 @@ if __name__ == "__main__":
 
         with open('output/markov.md', "a") as file:
             file.write('\n# %s->%s' % (peaks[i][0], peaks[i][1]))
-            file.write('\n## tau < 0\n')
-            file.write('  # |            a           |          l            |\n')
-            file.write('  --|------------------------|-----------------------|\n')
+            file.write('\n## tau < 0\n\n')
+            file.write('|  # |            a           |          l            |\n')
+            file.write('|----|------------------------|-----------------------|\n')
             file.write(str(nspec))
-            file.write('\n## tau > 0\n')
-            file.write('  # |            a           |          l            |\n')
-            file.write('  --|------------------------|-----------------------|\n')
+            file.write('\n\n## tau > 0\n\n')
+            file.write('|  # |            a           |          l            |\n')
+            file.write('|----|------------------------|-----------------------|\n')
             file.write(str(pspec))
-            file.write('\n')
+            file.write('\n\n')
+
+        plt.close()
+        plt.plot()
