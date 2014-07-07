@@ -1,10 +1,8 @@
 import matplotlib.pyplot as plt
-
 try:
     import prettyplotlib as ppl
 except ImportError:
     ppl = plt
-
 
 import numpy as np
 import scipy.optimize as optimize
@@ -14,15 +12,18 @@ from names import *
 np.seterr(all="ignore")
 
 
-def main():
+def main(subplots=False):
+
+    plt.figure(figsize=(10, 8))
 
     if not os.path.exists('output/specific/'):
         os.makedirs('output/specific/')
+        os.makedirs('output/specific/plots')
+        os.makedirs('output/specific/data')
 
     with open('output/fit_specific.md', "w") as file:
         file.write("")
 
-    # for i in [5]:
     for i in range(len(names)):
 
         name = names[i]
@@ -67,7 +68,7 @@ def main():
 
         with open('output/fit_specific.md', "a") as file:
             file.write("\n# %s\n" % label)
-            file.write('![](specific/specific_corrs%s.png)\n' % name)
+            file.write('![](specific/plots/%s.png)\n' % name)
 
             if type == "direct":
                 file.write("## Direct\n")
@@ -87,28 +88,44 @@ def main():
                 file.write("\tl1: %1.3lf +- %1.3lf\n" % (popta[0], perra[0]))
                 file.write("\tl2: %1.3lf +- %1.3lf\n" % (popta[1], perra[1]))
 
-        # just plotting stuff now
-        plt.close()
-        ppl.plot(time, counts_n, linewidth=4, alpha=0.3)
         if type == "direct":
-            ppl.plot(time, g2.g2c_direct(time, *poptd), label="Direct", linewidth=2)
+            exports = np.vstack((time, counts_n, g2.g2c_direct(time, *poptd))).T
         elif type == "indirect":
-            ppl.plot(time, g2.g2c_indirect(time, *popti), label="Indirect", linewidth=2)
+            exports = np.vstack((time, counts_n, g2.g2c_indirect(time, *popti))).T
         elif type == "antidirect":
-            ppl.plot(time, g2.g2c_antidirect(time, *popta), label="Antidirect", linewidth=2)
+            exports = np.vstack((time, counts_n, g2.g2c_antidirect(time, *popta))).T
 
-        plt.text(5, 0.1, label)
-        plt.xlim([-15, 15])
-        plt.ylim(ymin=0)
+        print "%d: saving specific fits %s" % (i, name) 
+        np.savetxt('output/specific/data/fit_%s.txt' % name, exports)
 
-        ppl.legend()
-        xlabel = plt.xlabel("$\\tau (ns)$")
-        plt.ylabel("$g^{(2)}(\\tau)$")
+        # just plotting stuff now
+        # if subplots is False:
+        #     plt.close()
+        # else:
+        #     plt.subplot(4, 3, i)
+        # ppl.plot(time, counts_n, linewidth=4, alpha=0.3)
+        # if type == "direct":
+        #     ppl.plot(time, g2.g2c_direct(time, *poptd), label="Direct", linewidth=2)
+        # elif type == "indirect":
+        #     ppl.plot(time, g2.g2c_indirect(time, *popti), label="Indirect", linewidth=2)
+        # elif type == "antidirect":
+        #     ppl.plot(time, g2.g2c_antidirect(time, *popta), label="Antidirect", linewidth=2)
 
-        print "saving specific fits %s" % name
-        plt.savefig('output/specific/specific_corrs%s.png' % name, bbox_extra_artists=[xlabel],
-                    bbox_inches='tight')
+        # plt.text(5, 0.1, label)
+        # plt.xlim([-15, 15])
+        # plt.ylim(ymin=0)
 
+        # plt.legend(fontsize=8)
+        # xlabel = plt.xlabel("$\\tau (ns)$")
+        # plt.ylabel("$g^{(2)}(\\tau)$")
+
+        # 
+        # if subplots is False:
+        #     plt.savefig('output/specific/plots/specific_corrs%s.png' % name, bbox_extra_artists=[xlabel],
+        #             bbox_inches='tight')
+
+    # if subplots is True:
+    #     plt.savefig('output/specific/plots/corrs.png', bbox_inches='tight')
 
 if __name__ == "__main__":
-    main()
+    main(True)
