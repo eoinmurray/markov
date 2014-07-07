@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+import os
 try:
     import prettyplotlib as ppl
 except ImportError:
@@ -13,6 +13,9 @@ np.seterr(all="ignore")
 
 
 def main():
+
+    if not os.path.exists('output/all/'):
+        os.makedirs('output/all/')
 
     with open('output/fit.md', "w") as file:
         file.write("")

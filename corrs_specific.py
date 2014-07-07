@@ -9,11 +9,15 @@ except ImportError:
 import numpy as np
 import scipy.optimize as optimize
 import g2 as g2
+import os
 from names import *
 np.seterr(all="ignore")
 
 
 def main():
+
+    if not os.path.exists('output/specific/'):
+        os.makedirs('output/specific/')
 
     with open('output/fit_specific.md', "w") as file:
         file.write("")

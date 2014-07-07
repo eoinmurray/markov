@@ -10,6 +10,7 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 import brewer2mpl
 from names import *
+import os
 
 set2 = brewer2mpl.get_map('Spectral', 'Diverging', 5).mpl_colors
 np.seterr(all="ignore")
@@ -39,7 +40,7 @@ chargedbiexciton = 10
 
 class TransitionMatrix():
 
-    def __init__(self, te=4.0, th=4.0, tpe=0.8, tph=10.0, gsf=1000.0, geh=1000.0, t001=0.001):
+    def __init__(self, te=8.0, th=2.0, tpe=0.8, tph=10.0, gsf=1000.0, geh=1000.0, t001=0.001):
         # electron hole capture times.
         self.te = te
         self.th = th
@@ -148,9 +149,9 @@ class MarkovExpansionState(TransitionMatrix):
         return "\n".join(s)
 
     def filter(self, ar, ai, lr, li):
-        if ar < 0.1 and ai < 0.1:
+        if np.abs(ar) < 0.1 and np.abs(ai) < 0.1:
             return False
-        if lr > 5.0 and li > 5.0:
+        if np.abs(lr) > 5.0 and np.abs(li) > 5.0:
             return False
         return True
 
@@ -159,13 +160,18 @@ class MarkovExpansionState(TransitionMatrix):
 
 
 if __name__ == "__main__":
+
+    if not os.path.exists('output/spectral/'):
+        os.makedirs('output/spectral/')
+
     with open('output/markov.md', "w") as file:
         file.write("")
 
     TM = TransitionMatrix()
 
     for i in range(11):
-        assert TM.matrix[:, i].sum() == 0.0, "Column %s does not sum to zero." % i
+        s = TM.matrix[:, i].sum()
+        assert np.abs(s) < 1e-6, "Column %s does not sum to zero, actually: %1.5lf." % (i, s)
     print "All columns sum to 0.0"
 
     t = np.linspace(0, 20, 400)
