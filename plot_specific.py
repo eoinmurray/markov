@@ -55,14 +55,21 @@ def subplots():
     data75 = np.loadtxt('output/specific/data/fit_7_5.txt')
 
     make_1_plot(data45, '45')
+    print 'saving 45'
+
     make_2_plot(data17, data27, '17_27')
+    print 'saving 17_27'
+
     make_4_plot(data16, data13, data26, data23, '16_13_26_23')
+    print 'saving 16_13_26_23'
+
     make_4_plot(data35, data75, data37, data67, '35_75_37_67')
+    print 'saving 35_75_37_67'
 
 
 def make_4_plot(data1, data2, data3, data4, name):
     plt.close()
-    plt.figure(figsize=(6, 6))
+    plt.figure(figsize=(6, 4))
 
     ax1 = plt.subplot(221)
     ax1.plot(data1[:, 0], data1[:, 1], color=set2[4], linewidth=2, alpha=0.5)
@@ -100,16 +107,16 @@ def make_4_plot(data1, data2, data3, data4, name):
     ax4.xaxis.set_label_coords(0, -0.1)
 
     a = name.split('_')
-    ax1.text(0.18, 0.9, a[0][0] + '_' + a[0][1], fontsize=20,
+    ax1.text(0.18, 0.8, a[0][0] + '_' + a[0][1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax1.transAxes)
-    ax2.text(0.18, 0.9, a[1][0] + '_' + a[1][1], fontsize=20,
+    ax2.text(0.18, 0.8, a[1][0] + '_' + a[1][1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax2.transAxes)
-    ax3.text(0.18, 0.9, a[2][0] + '_' + a[2][1], fontsize=20,
+    ax3.text(0.18, 0.8, a[2][0] + '_' + a[2][1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax3.transAxes)
-    ax4.text(0.18, 0.9, a[3][0] + '_' + a[3][1], fontsize=20,
+    ax4.text(0.18, 0.8, a[3][0] + '_' + a[3][1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax4.transAxes)
 
-    plt.savefig('output/specific/plots/grouped_%s.png' % name, bbox_inches='tight')
+    plt.savefig('output/specific/plots/grouped_%s.png' % name, bbox_inches='tight', dpi=600)
 
 
 def make_2_plot(data1, data2, name):
@@ -135,17 +142,17 @@ def make_2_plot(data1, data2, name):
     ax2.xaxis.set_label_coords(0, -0.1)
 
     a = name.split('_')
-    ax1.text(0.18, 0.9, a[0][0] + '_' + a[0][1], fontsize=20,
+    ax1.text(0.18, 0.9, a[0][0] + '_' + a[0][1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax1.transAxes)
-    ax2.text(0.18, 0.9, a[1][0] + '_' + a[1][1], fontsize=20,
+    ax2.text(0.18, 0.9, a[1][0] + '_' + a[1][1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax2.transAxes)
 
-    plt.savefig('output/specific/plots/grouped_%s.png' % name, bbox_inches='tight')
+    plt.savefig('output/specific/plots/grouped_%s.png' % name, bbox_inches='tight', dpi=600)
 
 
 def make_1_plot(data1, name):
     plt.close()
-    plt.figure(figsize=(3, 3))
+    plt.figure(figsize=(6, 3))
 
     ax1 = plt.subplot(111)
     ax1.plot(data1[:, 0], data1[:, 1], color=set2[4], linewidth=2, alpha=0.5)
@@ -157,9 +164,9 @@ def make_1_plot(data1, name):
     ax1.set_xlabel('$\\tau$(ns)', fontsize=14)
 
     a = name
-    ax1.text(0.18, 0.9, a[0] + '_' + a[1], fontsize=20,
+    ax1.text(0.18, 0.9, a[0] + '_' + a[1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax1.transAxes)
-    plt.savefig('output/specific/plots/grouped_%s.png' % name, bbox_inches='tight')
+    plt.savefig('output/specific/plots/grouped_%s.png' % name, bbox_inches='tight', dpi=600)
 
 
 if __name__ == "__main__":

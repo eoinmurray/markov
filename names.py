@@ -7,7 +7,6 @@ types = ['indirect', 'indirect', 'direct', 'direct',
 
 zeropoints = [171.6, 171.0, 171.5, 170.5, 171.1, 171.2, 171.2, 171.2, 171.2, 171.2, 171.2, 800-171.2]
 
-
 peaks = []
 for name in names:
     a = int(name.split('_')[0])

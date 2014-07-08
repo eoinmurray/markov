@@ -13,11 +13,11 @@ from names import *
 import os
 
 set2 = brewer2mpl.get_map('Spectral', 'Diverging', 5).mpl_colors
-np.seterr(all="ignore")
+np.seterr(all='ignore')
 
 
 def gauss(t):
-    """Generates gaussian for convolutionz"""
+    """Generates gaussian for convolution"""
     c = 0.3
     a = 1.0/np.sqrt(2*np.pi*(c**2))
     b = 0
@@ -55,20 +55,20 @@ class TransitionMatrix():
         # lifetimes.
 
         self.t001 = t001  # excited hole relaxation time.
-        self.t110 = 1.66  # exciton lifetime.
-        self.t120 = 1.9  # ground trion lifetime.
-        self.t1116 = 1.05  # hot trion 1 relax to ground hole (emission #6).
-        self.t1117 = 1.05  # hot trion 1 relax to excited hole (emission #7).
-        self.t220 = 0.9  # biexciton lifetime.
-        self.t2211 = 1.05  # charged biexciton to hot trion 1 (emision #1).
-        self.t2212 = 1.1  # charged biexciton to hot trion 2 (emision #2).
+        self.t110 = 1.66  # exciton lifetime (emission #5).
+        self.t120 = 1.86  # ground trion lifetime (emission #3).
+        self.t1116 = 1.33  # hot trion 1 relax to ground hole (emission #6).
+        self.t1117 = 1.33  # hot trion 1 relax to excited hole (emission #7).
+        self.t220 = 0.97  # biexciton lifetime (emission #4).
+        self.t2211 = 1.03  # charged biexciton to hot trion 1 (emision #1).
+        self.t2212 = 1.18  # charged biexciton to hot trion 2 (emision #2).
 
         s = self
         self.T = np.matrix([
             [-1.0/s.te-1.0/s.th, 0, 0, 0, 0, 1.0/s.t110, 0, 0, 0, 0, 0],
-            [1.0/s.te, -1.0/s.th, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1.0/s.te, -1.0/s.th, 0, 0, 0, 0, 0, 0, 0, 0, 0], # single electron
             [1.0/s.th, 0, -1.0/s.tpe - 1.0/s.tph, 0, 1.0/s.t001, 0, 1.0/s.t120, 1.0/s.t1116, 0, 0, 0],
-            [0, 0, 1.0/s.tph, -1.0/s.tpe, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1.0/s.tph, -1.0/s.tpe, 0, 0, 0, 0, 0, 0, 0], # two hole.
             [0, 0, 0, 0, -1.0/s.t001, 0, 0, 1.0/s.t1117, 0, 0, 0],
             [0, 1.0/s.th, 1.0/s.tpe, 0, 0, -1.0/s.th-1.0/s.t110, 0, 0, 0, 1.0/s.t220, 0],
             [0, 0, 0, 1.0/s.tpe, 0, 1.0/s.th, -1.0/s.t120-1.0/s.geh-1.0/s.tpe, 1.0/s.gsf, 1.0/s.t001, 0, 0],
@@ -143,10 +143,10 @@ class MarkovExpansionState(TransitionMatrix):
             li = l[j].imag
 
             if self.filter(ar, ai, lr, li):
-                a_s = "\t{:3d} | a: {:8.3f} + {:8.3f}i \t l: {:8.3f} + {:8.3f}i" .format(1+j, ar, ai, lr, li)
+                a_s = '\t{:3d} | a: {:8.3f} + {:8.3f}i \t l: {:8.3f} + {:8.3f}i' .format(1+j, ar, ai, lr, li)
                 s.append(a_s)
 
-        return "\n".join(s)
+        return '\n'.join(s)
 
     def filter(self, ar, ai, lr, li):
         if np.abs(ar) < 0.1 and np.abs(ai) < 0.1:
@@ -159,20 +159,20 @@ class MarkovExpansionState(TransitionMatrix):
         return self._foo(t)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     if not os.path.exists('output/spectral/'):
         os.makedirs('output/spectral/')
 
-    with open('output/markov.md', "w") as file:
-        file.write("")
+    with open('output/markov.md', 'w') as file:
+        file.write('')
 
     TM = TransitionMatrix()
 
     for i in range(11):
         s = TM.matrix[:, i].sum()
-        assert np.abs(s) < 1e-6, "Column %s does not sum to zero, actually: %1.5lf." % (i, s)
-    print "All columns sum to 0.0"
+        assert np.abs(s) < 1e-6, 'Column %s does not sum to zero, actually: %1.5lf.' % (i, s)
+    print 'All columns sum to 0.0'
 
     t = np.linspace(0, 20, 400)
     tau = np.concatenate((-t[::-1], t[1:-1]), axis=0)
@@ -202,7 +202,7 @@ if __name__ == "__main__":
         nspec = MarkovExpansionState(statefn, stateip)
 
         name = '%s_%s' % (peaks[i][0], peaks[i][1])
-        with open('output/markov.md', "a") as file:
+        with open('output/markov.md', 'a') as file:
             file.write('\n# %s\n' % name)
             file.write('![](spectral/%s.png)' % name)
             file.write('\n\n## tau > 0\n')
