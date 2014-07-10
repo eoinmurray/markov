@@ -27,26 +27,22 @@ def gauss(t):
 # States
 empty = 0
 groundhole = 1
-twohole = 2
-groundelectron = 3
-excitedhole = 4
-exciton = 5
-groundtrion = 6
-hottrion1 = 7  # state that emits #6 and #7 and spin flips.
-hottrion2 = 8  # state that relaxes quickly to groundtrion.
-biexciton = 9
-chargedbiexciton = 10
+excitedhole = 2
+exciton = 3
+groundtrion = 4
+hottrion1 = 5  # state that emits #6 and #7 and spin flips.
+hottrion2 = 6  # state that relaxes quickly to groundtrion.
+biexciton = 7
+chargedbiexciton = 8
 
 
 class TransitionMatrix():
 
-    def __init__(self, te=8.0, th=2.0, tpe=0.8, tph=10.0, gsf=1000.0, geh=1000.0, t001=0.001):
+    def __init__(self, th=1.48, tpe=1.0, gsf=2.0, geh=10.0, t001=0.001):
         # electron hole capture times.
-        self.te = te
         self.th = th
         # electron hole capture times in positive QD.
         self.tpe = tpe
-        self.tph = tph
         # spin flip time
         self.gsf = gsf
         # time for ground hole to be excited.
@@ -65,17 +61,17 @@ class TransitionMatrix():
 
         s = self
         self.T = np.matrix([
-            [-1.0/s.te-1.0/s.th, 0, 0, 0, 0, 1.0/s.t110, 0, 0, 0, 0, 0],
-            [1.0/s.te, -1.0/s.th, 0, 0, 0, 0, 0, 0, 0, 0, 0], # single electron
-            [1.0/s.th, 0, -1.0/s.tpe - 1.0/s.tph, 0, 1.0/s.t001, 0, 1.0/s.t120, 1.0/s.t1116, 0, 0, 0],
-            [0, 0, 1.0/s.tph, -1.0/s.tpe, 0, 0, 0, 0, 0, 0, 0], # two hole.
-            [0, 0, 0, 0, -1.0/s.t001, 0, 0, 1.0/s.t1117, 0, 0, 0],
-            [0, 1.0/s.th, 1.0/s.tpe, 0, 0, -1.0/s.th-1.0/s.t110, 0, 0, 0, 1.0/s.t220, 0],
-            [0, 0, 0, 1.0/s.tpe, 0, 1.0/s.th, -1.0/s.t120-1.0/s.geh-1.0/s.tpe, 1.0/s.gsf, 1.0/s.t001, 0, 0],
-            [0, 0, 0, 0, 0, 0, 1.0/s.geh, -1.0/s.t1116-1.0/s.t1117-1.0/s.gsf, 0, 0, (2.0/3)*(1.0/s.t2211)],
-            [0, 0, 0, 0, 0, 0, 0, 0, -1.0/s.t001, 0, (1.0/3)*(1.0/s.t2212)],
-            [0, 0, 0, 0, 0, 0, 1.0/s.tpe, 0, 0, -1.0/s.th-1.0/s.t220, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0/s.th, -(2.0/3)*(1.0/s.t2211)-(1.0/3)*(1.0/s.t2212)]
+            [-1.0/s.th, 0, 0, 1.0/s.t110, 0, 0, 0, 0, 0],
+            # [1.0/s.te, 0, 0, 0, 0, 0, 0, 0, 0], # single electron
+            [1.0/s.th, -1.0/s.tpe, 1.0/s.t001, 0, 1.0/s.t120, 1.0/s.t1116, 0, 0, 0],
+            # [0, 1.0/s.tph, 0, 0, 0, 0, 0, 0, 0], # two hole.
+            [0, 0, -1.0/s.t001, 0, 0, 1.0/s.t1117, 0, 0, 0],
+            [0, 1.0/s.tpe, 0, -1.0/s.th-1.0/s.t110, 0, 0, 0, 1.0/s.t220, 0],
+            [0, 0, 0, 1.0/s.th, -1.0/s.t120-1.0/s.geh-1.0/s.tpe, 1.0/s.gsf, 1.0/s.t001, 0, 0],
+            [0, 0, 0, 0, 1.0/s.geh, -1.0/s.t1116-1.0/s.t1117-1.0/s.gsf, 0, 0, (2.0/3)*(1.0/s.t2211)],
+            [0, 0, 0, 0, 0, 0, -1.0/s.t001, 0, (1.0/3)*(1.0/s.t2212)],
+            [0, 0, 0, 0, 1.0/s.tpe, 0, 0, -1.0/s.th-1.0/s.t220, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1.0/s.th, -(2.0/3)*(1.0/s.t2211)-(1.0/3)*(1.0/s.t2212)]
         ])
 
         self.matrix = self.T
@@ -169,7 +165,7 @@ if __name__ == '__main__':
 
     TM = TransitionMatrix()
 
-    for i in range(11):
+    for i in range(9):
         s = TM.matrix[:, i].sum()
         assert np.abs(s) < 1e-6, 'Column %s does not sum to zero, actually: %1.5lf.' % (i, s)
     print 'All columns sum to 0.0'
