@@ -7,7 +7,7 @@ T = TransitionMatrix()
 
 idx = T.evals.argsort()[::-1]
 evals = T.evals[idx]
-evecs = T.evecs[idx]
+evecs = T.evecs[:, idx]
 
 evalstring = ['%1.1lf' % e for e in evals]
 
@@ -23,7 +23,21 @@ fig, ax = ppl.subplots(1)
 # p = ax.pcolormesh(pevecs)
 ppl.pcolormesh(fig, ax, pevecs)
 # fig.colorbar(p)
-plt.yticks(9-np.arange(9)-0.5, ['$0$', '$h$', '$\hat{h}$', '$X$', '$X^+$', '$\hat{X}_1^+$', '$\hat{X}_2^+$', '$XX$', '$XX^+$'])
+plt.yticks(9-np.arange(9)-0.5,
+           ['$0$', '$h$', '$\hat{h}$', '$X$', '$X^+$', '$\hat{X}_1^+$', '$\hat{X}_2^+$', '$XX$', '$XX^+$'])
 plt.xticks(0.5+np.arange(9), evalstring)
 
 plt.savefig('output/evecs.png')
+
+plt.close()
+
+fig, ax = ppl.subplots(1)
+# p = ax.pcolormesh(pevecs)
+
+ppl.pcolormesh(fig, ax, T.matrix)
+# fig.colorbar(p)
+# plt.yticks(9-np.arange(9)-0.5,
+           # ['$0$', '$h$', '$\hat{h}$', '$X$', '$X^+$', '$\hat{X}_1^+$', '$\hat{X}_2^+$', '$XX$', '$XX^+$'])
+# plt.xticks(0.5+np.arange(9), evalstring)
+
+plt.savefig('output/matrix.png')
