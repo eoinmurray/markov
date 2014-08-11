@@ -77,6 +77,39 @@ def main():
             file.write("\tl1: %1.3lf +- %1.3lf\n" % (popta[0], perra[1]))
             file.write("\tl2: %1.3lf +- %1.3lf\n" % (popta[1], perra[0]))
 
+        a = g2.g2c_direct(time, *poptd)
+        b = g2.g2c_indirect(time, *popti)
+        c = g2.g2c_antidirect(time, *popta)
+        null = np.zeros_like(c)
+
+        if name == "1_3":
+            exports = np.vstack((time, counts_n, a, b, null)).T
+        elif name == "1_6":
+            exports = np.vstack((time, counts_n, a, b, null)).T
+        elif name == "1_7":
+            exports = np.vstack((time, counts_n, a, b, null)).T
+        elif name == "2_3":
+            exports = np.vstack((time, counts_n, a, b, null)).T
+        elif name == "2_6":
+            exports = np.vstack((time, counts_n, null, b, c)).T
+        elif name == "2_7":
+            exports = np.vstack((time, counts_n, a, b, null)).T
+        elif name == "3_5":
+            exports = np.vstack((time, counts_n, null, b, c)).T
+        elif name == "3_7":
+            exports = np.vstack((time, counts_n, null, b, c)).T
+        elif name == "4_5":
+            exports = np.vstack((time, counts_n, a, null, null)).T
+        elif name == "5_7":
+            exports = np.vstack((time, counts_n, null, b, c)).T
+        elif name == "6_7":
+            exports = np.vstack((time, counts_n, null, b, c)).T
+        elif name == "7_5":
+            exports = np.vstack((time, counts_n, null, b, c)).T
+
+        print "%d: saving specific fits %s" % (i, name)
+        np.savetxt('output/all/data/fit_%s.txt' % name, exports)
+
         # just plotting stuff now
         plt.close()
         ppl.plot(time, counts_n, linewidth=4, alpha=0.3)

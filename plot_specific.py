@@ -11,6 +11,8 @@ import numpy as np
 from names import *
 np.seterr(all="ignore")
 
+target = 'all'
+
 
 def all():
     for i in range(len(names)):
@@ -18,7 +20,7 @@ def all():
         label = labels[i]
         type = types[i]
 
-        data = np.loadtxt('output/specific/data/fit_%s.txt' % name)
+        data = np.loadtxt('output/'+target+'/data/fit_%s.txt' % name)
 
         time = data[:, 0]
         counts = data[:, 1]
@@ -37,22 +39,22 @@ def all():
         xlabel = plt.xlabel("$\\tau (ns)$")
         plt.ylabel("$g^{(2)}(\\tau)$")
 
-        plt.savefig('output/specific/plots/%s.png' % name,
+        plt.savefig('output/'+target+'/plots/%s.png' % name,
                     bbox_extra_artists=[xlabel], bbox_inches='tight')
 
 
 def subplots():
-    data13 = np.loadtxt('output/specific/data/fit_1_3.txt')
-    data16 = np.loadtxt('output/specific/data/fit_1_6.txt')
-    data17 = np.loadtxt('output/specific/data/fit_1_7.txt')
-    data23 = np.loadtxt('output/specific/data/fit_2_3.txt')
-    data26 = np.loadtxt('output/specific/data/fit_2_6.txt')
-    data27 = np.loadtxt('output/specific/data/fit_2_7.txt')
-    data35 = np.loadtxt('output/specific/data/fit_3_5.txt')
-    data37 = np.loadtxt('output/specific/data/fit_3_7.txt')
-    data45 = np.loadtxt('output/specific/data/fit_4_5.txt')
-    data67 = np.loadtxt('output/specific/data/fit_6_7.txt')
-    data75 = np.loadtxt('output/specific/data/fit_7_5.txt')
+    data13 = np.loadtxt('output/'+target+'/data/fit_1_3.txt')
+    data16 = np.loadtxt('output/'+target+'/data/fit_1_6.txt')
+    data17 = np.loadtxt('output/'+target+'/data/fit_1_7.txt')
+    data23 = np.loadtxt('output/'+target+'/data/fit_2_3.txt')
+    data26 = np.loadtxt('output/'+target+'/data/fit_2_6.txt')
+    data27 = np.loadtxt('output/'+target+'/data/fit_2_7.txt')
+    data35 = np.loadtxt('output/'+target+'/data/fit_3_5.txt')
+    data37 = np.loadtxt('output/'+target+'/data/fit_3_7.txt')
+    data45 = np.loadtxt('output/'+target+'/data/fit_4_5.txt')
+    data67 = np.loadtxt('output/'+target+'/data/fit_6_7.txt')
+    data75 = np.loadtxt('output/'+target+'/data/fit_7_5.txt')
 
     make_1_plot(data45, '45')
     print 'saving 45'
@@ -67,32 +69,52 @@ def subplots():
     print 'saving 35_75_37_67'
 
 
+def plot_corrs(ax, data):
+    x = data[:, 0]
+    y = data[:, 1]
+    a = data[:, 2]
+    b = data[:, 3]
+    c = data[:, 4]
+
+    att1 = {'color': 'black', 'markerfacecolor': 'none', 'markersize': 6.0,
+            'markeredgewidth': 0.5, 'alpha': 0.0, 'marker': 'o', 'markeredgecolor': 'blue'}
+
+    ax.scatter(x, y, s=40, facecolors='none', edgecolors='b', alpha=0.4)
+    if not np.all(a == 0.0):
+        ax.plot(x, a, 'r-', label='direct', linewidth=2)
+    if not np.all(b == 0.0):
+        ax.plot(x, b, 'g-', label='indirect', linewidth=2)
+    if not np.all(c == 0.0):
+        ax.plot(x, c, 'k-', label='antidirect', linewidth=2)
+
+    ax.legend(fontsize=6)
+    ax.set_xlim([-15, 15])
+    return ax
+
+
 def make_4_plot(data1, data2, data3, data4, name):
     plt.close()
     plt.figure(figsize=(6, 4))
 
     ax1 = plt.subplot(221)
-    ax1.plot(data1[:, 0], data1[:, 1], color=set2[4], linewidth=2, alpha=0.5)
-    ax1.plot(data1[:, 0], data1[:, 2], color=set2[0], linewidth=2)
+    ax1 = plot_corrs(ax1, data1)
+
     plt.xticks([-15, -10, -5, 0, 5, 10, 15], fontsize=10)
     a = np.array(plt.yticks()[0])
     plt.yticks(a[1:-1], fontsize=10)
 
     ax2 = plt.subplot(222, sharey=ax1)
-    ax2.plot(data2[:, 0], data2[:, 1], color=set2[4], linewidth=2, alpha=0.5)
-    ax2.plot(data2[:, 0], data2[:, 2], color=set2[0], linewidth=2)
+    plot_corrs(ax2, data2)
     plt.xticks([-15, -10, -5, 0, 5, 10, 15], fontsize=10)
 
     ax3 = plt.subplot(223, sharex=ax1)
-    ax3.plot(data3[:, 0], data3[:, 1], color=set2[4], linewidth=2, alpha=0.5)
-    ax3.plot(data3[:, 0], data3[:, 2], color=set2[0], linewidth=2)
+    plot_corrs(ax3, data3)
     plt.xticks([-15, -10, -5, 0, 5, 10, 15], fontsize=10)
     a = np.array(plt.yticks()[0])
     plt.yticks(a[1:-1], fontsize=10)
 
     ax4 = plt.subplot(224, sharey=ax3, sharex=ax1)
-    ax4.plot(data4[:, 0], data4[:, 1], color=set2[4], linewidth=2, alpha=0.5)
-    ax4.plot(data4[:, 0], data4[:, 2], color=set2[0], linewidth=2)
+    plot_corrs(ax4, data4)
     plt.xticks([-15, -10, -5, 0, 5, 10, 15], fontsize=10)
 
     plt.setp(ax1.get_xticklabels(), visible=False)
@@ -116,7 +138,7 @@ def make_4_plot(data1, data2, data3, data4, name):
     ax4.text(0.18, 0.8, a[3][0] + '_' + a[3][1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax4.transAxes)
 
-    plt.savefig('output/specific/plots/grouped_%s.png' % name, bbox_inches='tight', dpi=600)
+    plt.savefig('output/'+target+'/plots/grouped_%s.png' % name, bbox_inches='tight')
 
 
 def make_2_plot(data1, data2, name):
@@ -124,14 +146,12 @@ def make_2_plot(data1, data2, name):
     plt.figure(figsize=(6, 3))
 
     ax1 = plt.subplot(121)
-    ax1.plot(data1[:, 0], data1[:, 1], color=set2[4], linewidth=2, alpha=0.5)
-    ax1.plot(data1[:, 0], data1[:, 2], color=set2[0], linewidth=2)
+    plot_corrs(ax1, data1)
     plt.xticks([-15, -10, -5, 0, 5, 10, 15], fontsize=10)
     plt.yticks(fontsize=10)
 
     ax2 = plt.subplot(122, sharey=ax1)
-    ax2.plot(data2[:, 0], data2[:, 1], color=set2[4], linewidth=2, alpha=0.5)
-    ax2.plot(data2[:, 0], data2[:, 2], color=set2[0], linewidth=2)
+    plot_corrs(ax2, data2)
     plt.xticks([-15, -10, -5, 0, 5, 10, 15], fontsize=10)
 
     plt.setp(ax2.get_yticklabels(), visible=False)
@@ -147,7 +167,7 @@ def make_2_plot(data1, data2, name):
     ax2.text(0.18, 0.9, a[1][0] + '_' + a[1][1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax2.transAxes)
 
-    plt.savefig('output/specific/plots/grouped_%s.png' % name, bbox_inches='tight', dpi=600)
+    plt.savefig('output/'+target+'/plots/grouped_%s.png' % name, bbox_inches='tight')
 
 
 def make_1_plot(data1, name):
@@ -155,8 +175,7 @@ def make_1_plot(data1, name):
     plt.figure(figsize=(6, 3))
 
     ax1 = plt.subplot(111)
-    ax1.plot(data1[:, 0], data1[:, 1], color=set2[4], linewidth=2, alpha=0.5)
-    ax1.plot(data1[:, 0], data1[:, 2], color=set2[0], linewidth=2)
+    plot_corrs(ax1, data1)
     plt.xticks([-15, -10, -5, 0, 5, 10, 15], fontsize=10)
     plt.yticks(fontsize=10)
 
@@ -166,7 +185,7 @@ def make_1_plot(data1, name):
     a = name
     ax1.text(0.18, 0.9, a[0] + '_' + a[1], fontsize=16,
              horizontalalignment='center', verticalalignment='center', transform=ax1.transAxes)
-    plt.savefig('output/specific/plots/grouped_%s.png' % name, bbox_inches='tight', dpi=600)
+    plt.savefig('output/'+target+'/plots/grouped_%s.png' % name, bbox_inches='tight')
 
 
 if __name__ == "__main__":
